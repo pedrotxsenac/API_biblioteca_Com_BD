@@ -95,8 +95,8 @@ function realizarRetiradaLivro(idLivro, clienteId) {
         if (verificarLimiteRetiradas(clienteId)) {
             livro.retirado = true;
             livro.IdCliente = cliente.id;
-            livro.dataRetirada = str(new Date());
-            livro.dataEntrega = str(calcularDataEntrega());
+            livro.dataRetirada = new Date();
+            livro.dataEntrega = calcularDataEntrega();
             cliente.livrosRetirados+=1;
             return livro;
         } else {
