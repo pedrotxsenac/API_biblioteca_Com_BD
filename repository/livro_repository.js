@@ -112,16 +112,14 @@ async function realizarRetiradaLivro(idLivro, clienteId) {
     const clienteReal = await repositoryClientes.buscarClientePorId(clienteId);
     const livro = await buscarLivroPorId(idLivro);   
     
-    return livro.nome;
     if (!livro.retirado) {
         if (verificarLimiteRetiradas(clienteId)) {    
             const dataRetirada = new Date();
             const dataEntrega = calcularDataEntrega();
             let livros_retirados = clienteReal.livrosRetirados + 1;
-            const sql1 = 'ALTER TABLE clientes ADD COLUMN retirado INT, ADD COLUMN idCLiente INT, ADD COLUMN dataRetirada VARCHAR(50), ADD COLUMN dataEntrega VARCHAR(50);' //apelei pra isso
-            await cliente.query(sql1);
-            const sql = 'UPDATE livros SET retirado=$1, idCliente=$2, dataRetirada=now(), dataEntrega=now() WHERE id=$5 RETURNING *';
-            const values = [true, clienteReal.id, dataRetirada, dataEntrega, idLivro];
+            
+            const sql = 'UPDATE livros SET retirado=$1, idCliente=$2, dataRetirada=now(), dataEntrega=now() WHERE id=$3 RETURNING *';
+            const values = [true, clienteReal.id, idLivro];
             
             const sql2 = 'UPDATE clientes SET livrosRetirados=$1 WHERE id=$2 RETURNING *';
             await cliente.query(sql2, values2);
@@ -224,3 +222,4 @@ module.exports = {
     verificarLimiteRetiradas,
     buscarLivroPorNome
 };
+
